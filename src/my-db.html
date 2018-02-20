@@ -1,0 +1,128 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-pouchdb/pouchdb.html">
+
+<dom-module id="my-db">
+    <template>
+        <style>
+            :host {
+                display: block
+            }
+        </style>
+
+
+
+    </template>
+
+    <script>
+        /**
+         * `my-db` My static db
+         *
+         * @summary fajsdfasdf.
+         * @customElement
+         * @polymer
+         * @extends {Polymer.Element}
+         */
+        class MyDb extends Polymer.Element {
+            /**
+             * String providing the tag name to register the element under.
+             */
+            static get is() {
+                return 'my-db';
+            }
+
+            /**
+             * Object describing property-related metadata used by Polymer features
+             */
+            static get properties() {
+                return {
+                    db: {
+                        type: Object,
+                        value: {
+                            "teams": [{
+                                "id": "1",
+                                "name": "team1",
+                                "members": ["1"]
+                            }, {
+                                "id": "2",
+                                "name": "team2",
+                                "members": []
+                            }, {
+                                "id": "3",
+                                "name": "team3",
+                                "members": [
+                                    "1", "3"
+                                ]
+                            }],
+                            "members": [{
+                                "id": "1",
+                                "name": "pepe",
+                            }, {
+                                "id": "2",
+                                "name": "juan",
+                            }, {
+                                "id": "3",
+                                "name": "pedro",
+                            }]
+                        },
+                        notify: true
+                    }
+                };
+            }
+
+            /**
+             * Instance of the element is created/upgraded. Use: initializing state,
+             * set up event listeners, create shadow dom.
+             * @constructor
+             */
+            constructor() {
+                super();
+
+            }
+
+            /**
+             * Use for one-time configuration of your component after local DOM is initialized. 
+             */
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function () {
+                    debugger;
+                    window['mydb'] = new PouchDB('my-local')
+                    window.mydb.bulkDocs([{
+                        name: 'Equipo1',
+                        members: [
+                            "u1", "u3"
+                        ],
+                        _id: 'e1'
+                    }, {
+                        name: 'Equipo2',
+                        _id: 'e2',
+                        members: []
+                    }, {
+                        title: 'Equipo3',
+                        _id: 'e3',
+                        members: ["u1"]
+                    }, {
+                        title: 'User1',
+                        _id: 'u1'
+                    }, {
+                        title: 'User2',
+                        _id: 'u2'
+                    }, {
+                        title: 'User3',
+                        _id: 'u3'
+                    }]).then(function (result) {
+                        // handle result
+                    }).catch(function (err) {
+                        console.log(err);
+                    });
+
+
+                });
+            }
+
+        }
+
+        window.customElements.define(MyDb.is, MyDb);
+    </script>
+</dom-module>

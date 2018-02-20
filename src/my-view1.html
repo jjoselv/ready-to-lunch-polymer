@@ -9,7 +9,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/app-pouchdb/app-pouchdb-document.html">
 <link rel="import" href="shared-styles.html">
+
+
+<link rel="import" href="my-db.html">
 
 <dom-module id="my-view1">
   <template>
@@ -21,17 +26,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <my-db db="{{myDatabase}}"></my-db>
     <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-    </div>
+      <app-pouchdb-document db-name="my-local" doc-id="pepe" data="{{cat}}">
+      </app-pouchdb-document>
+      <div class="">
+        Document name: [[cat.name]]
+      </div>
+      <input is="iron-input" bind-value="{{cat.name}}">
+      </input>
   </template>
 
   <script>
     class MyView1 extends Polymer.Element {
-      static get is() { return 'my-view1'; }
+      static get is() {
+        return 'my-view1';
+      }
+      static get properties() {
+        return {
+          myDatabase: Object
+          // cat: {
+          //   type: String,
+          //   value: 'holahola'
+          // }
+        }
+      }
+      ready() {
+        super.ready();
+
+        Polymer.RenderStatus.afterNextRender(this, function () {
+          console.log(this.myDatabase);
+        });
+      }
     }
 
     window.customElements.define(MyView1.is, MyView1);
